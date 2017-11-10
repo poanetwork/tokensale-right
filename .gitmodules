@@ -1,0 +1,4 @@
+[submodule "treasury"]
+	path = treasury
+	url = https://github.com/oraclesorg/treasury
+	branch = master
