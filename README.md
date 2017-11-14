@@ -25,7 +25,7 @@ Token total supply is transfered to the right-side bridge contract address balan
 
 ## Tokensale
 
-![](./docs/Tokensale-right.png)
+![](./docs/Tokensale.png)
 
 ## After tokensale
 
