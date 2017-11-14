@@ -4,9 +4,23 @@
 
 ## Before tokensale
 
-- Right-side bridge contract is deployed to the network
-- ERC20 compatible token contract is deployed to the network. Parameters of token constructor: right-side bridge contract address, totalSupply and decimals.
-- Bridge is started
+- Right-side bridge contract `ForeignBridge` is deployed to the network. Parameters of the constructor: 
+
+| param |   type    |                  Description                    |    Value                                |
+|-------|-----------|-------------------------------------------------|-----------------------------------------|
+| n     | uint256   | Number of authorities to approve deposit tokens | 1                                       |
+| a     | address[] | Array of authorities' addresses                 | [addr_will_send_deposit_tx_to_contract] |
+
+- ERC20 compatible token `OraclesToken` contract is deployed to the network. Parameters of the token constructor: 
+
+| param             |  type   |            Description             |   Value    |
+|-------------------|---------|------------------------------------|------------|
+| _bridgeAddress    | address | Right-side bridge contract address |            |
+| _totalSupplyItems | uint256 | Token total supply for crowdsale   | 176722560  |
+| _decimals         | uint256 | Token decimals                     | 18         |
+
+Token total supply is transfered to the right-side bridge contract address balance at deployment.
+- Bridge is configured and started
 
 
 ## Tokensale
