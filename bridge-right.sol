@@ -18,13 +18,6 @@ library Authorities {
     }
 }
 
-/// Library used only to test Signer library via rpc calls
-library SignerTest {
-    function signer (bytes signature, bytes message) constant returns (address) {
-        return Signer.signer(signature, message);
-    }
-}
-
 library Utils {
     function toString (uint256 v) internal returns (string str) {
         // it is used only for small numbers
@@ -63,80 +56,6 @@ library Signer {
     }
 }
 
-contract HomeBridge {
-    using Authorities for address[];
-
-    /// Number of authorities signatures required to withdraw the money.
-    ///
-    /// Must be lesser than number of authorities.
-    uint public requiredSignatures;
-
-    /// Contract authorities.
-    address[] public authorities;
-
-    /// Used foreign transaction hashes.
-    mapping (bytes32 => bool) withdraws;
-
-    /// Event created on money deposit.
-    event Deposit (address recipient, uint value);
-
-    /// Event created on money withdraw.
-    event Withdraw (address recipient, uint value);
-
-    /// Multisig authority validation
-    modifier allAuthorities (uint8[] v, bytes32[] r, bytes32[] s, bytes message) {
-        var hash = Signer.hash(message);
-        var used = new address[](requiredSignatures);
-
-        require(requiredSignatures <= v.length);
-
-        for (uint i = 0; i < requiredSignatures; i++) {
-            var a = ecrecover(hash, v[i], r[i], s[i]);
-            require(authorities.contains(a));
-            require(!used.contains(a));
-            used[i] = a;
-        }
-        _;
-    }
-
-    /// Constructor.
-    function HomeBridge (uint n, address[] a) {
-        require(n != 0);
-        require(n <= a.length);
-        requiredSignatures = n;
-        authorities = a;
-    }
-
-    /// Should be used to deposit money.
-    function () payable {
-        Deposit(msg.sender, msg.value);
-    }
-
-    /// Used to withdrawn money from the contract.
-    ///
-    /// message contains:
-    /// withdrawal recipient (bytes20)
-    /// withdrawal value (uint)
-    /// foreign transaction hash (bytes32) // to avoid transaction duplication
-    function withdraw (uint8[] v, bytes32[] r, bytes32[] s, bytes message) allAuthorities(v, r, s, message) {
-        address recipient;
-        uint value;
-        bytes32 hash;
-        assembly {
-            recipient := mload(add(message, 0x20))
-            value := mload(add(message, 0x40))
-            hash := mload(add(message, 0x60))
-        }
-
-        // Duplicated withdraw
-        require(!withdraws[hash]);
-
-        // Order of operations below is critical to avoid TheDAO-like bug
-        withdraws[hash] = true;
-        recipient.transfer(value);
-        Withdraw(recipient, value);
-    }
-}
 
 contract ERC20 {
     function transfer(address to, uint256 value) public returns (bool);
