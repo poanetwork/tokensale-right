@@ -13,11 +13,11 @@
 
 - ERC20 compatible token `OraclesToken` contract is deployed to the network. Parameters of the token constructor: 
 
-| Param             |  Type   |            Description             |   Value    |
-|-------------------|---------|------------------------------------|------------|
-| _bridgeAddress    | address | Right-side bridge contract address |            |
-| _totalSupplyItems | uint256 | Token total supply for crowdsale   | 176722560  |
-| _decimals         | uint256 | Token decimals                     | 18         |
+| Param             |  Type   |            Description             |         Value         |
+|-------------------|---------|------------------------------------|-----------------------|
+| _bridgeAddress    | address | Right-side bridge contract address | ForeignBridge_address |
+| _totalSupplyItems | uint256 | Token total supply for crowdsale   | 176722560             |
+| _decimals         | uint256 | Token decimals                     | 18                    |
 
 Token total supply is transfered to the right-side bridge contract address balance at deployment.
 - Bridge is configured and started
@@ -29,4 +29,15 @@ Token total supply is transfered to the right-side bridge contract address balan
 
 ## After tokensale
 
+- `Treausury` contract is deployed to the network.
+- `Initialize` transaction is sent to treasury with params:
 
+| Param  |  Type   |                 Description                    |
+|--------|---------|------------------------------------------------|
+| _token | address | Token contract address                         |
+| _rate  | uint256 | Rate, at which tokens will be exchanged to coins<br/>Number_of_coins = Number_of_tokens * Rate  |
+
+
+- `setTreasury` transaction sent to `OraclesToken` contract.
+
+Users are able to exchange their tokens to coins at the right side with sending `transfer` transaction on `OraclesContract` to `Treasury_address`.
