@@ -38,6 +38,6 @@ Token total supply is transfered to the right-side bridge contract address balan
 | _rate  | uint256 | Rate, at which tokens will be exchanged to coins<br/>Number_of_coins = Number_of_tokens * Rate  |
 
 
-- `setTreasury` transaction sent to `OraclesToken` contract.
+- `setTreasury` transaction is sent to `OraclesToken` contract.
 
 Users are able to exchange their tokens to coins at the right side with sending `transfer` transaction on `OraclesContract` to `Treasury_address`.
